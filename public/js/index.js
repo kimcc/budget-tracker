@@ -115,11 +115,11 @@ function sendTransaction(isAdding) {
   // also send to server
   fetch("/api/transaction", {
     method: "POST",
-    body: JSON.stringify(transaction),
     headers: {
       Accept: "application/json, text/plain, */*",
       "Content-Type": "application/json"
-    }
+    },
+    body: JSON.stringify(transaction),
   })
   .then(response => {    
     return response.json();
@@ -135,6 +135,7 @@ function sendTransaction(isAdding) {
     }
   })
   .catch(err => {
+    console.log(err);
     // fetch failed, so save in indexed db
     saveRecord(transaction);
 

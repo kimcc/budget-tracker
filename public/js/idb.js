@@ -1,5 +1,3 @@
-const { application } = require("express");
-
 let db;
 // establish a connection to IndexedDB database called 'budget_tracker' and set it to version 1
 const request = indexedDB.open('budget_tracker', 1);
@@ -8,13 +6,13 @@ request.onupgradeneeded = function(event) {
   const db = event.target.result;
 
   db.createObjectStore('new_transaction', { autoIncrement: true });
+};
 
-  request.onsuccess = function(event) {
-    db.event.target.result;
+request.onsuccess = function(event) {
+  db = event.target.result;
 
-    if (navigator.onLine) {
-      uploadTransaction();
-    }
+  if (navigator.onLine) {
+    uploadTransaction();
   }
 };
 
@@ -30,7 +28,7 @@ function saveRecord(record) {
 }
 
 function uploadTransaction() {
-  const transaction = db.transaction(['new_transaction'], 'readWrite');
+  const transaction = db.transaction(['new_transaction'], 'readwrite');
   const transactionObjectStore = transaction.objectStore('new_transaction');
   const getAll = transactionObjectStore.getAll();
 
@@ -49,15 +47,15 @@ function uploadTransaction() {
         if (serverResponse.message) {
           throw new Error(serverResponse);
         }
-        const transaction = db.transaction(['new_transaction'], 'readWrite');
+        const transaction = db.transaction(['new_transaction'], 'readwrite');
         const transactionObjectStore = transaction.objectStore('new_transaction');
         transactionObjectStore.clear();
 
         alert('All saved transactions have been submitted!');
       })
-        .catch(err => {
-          console.log(err);
-        });
+      .catch(err => {
+        console.log(err);
+      });
     }
   };
 }
